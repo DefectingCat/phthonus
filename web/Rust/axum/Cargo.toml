@@ -18,6 +18,7 @@ thiserror = "1.0.63"
 dotenvy = "0.15.7"
 serde = { version = "1.0.210", features = ["derive", "serde_derive"] }
 serde_json = { version = "1.0.128" }
+serde_repr = "0.1.19"
 
 [profile.release]
 lto = true
