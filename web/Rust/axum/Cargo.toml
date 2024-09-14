@@ -3,6 +3,9 @@ name = "phthonus"
 version = "0.1.0"
 edition = "2021"
 
+[build]
+rustflags = ["-C", "target-cpu=native"]
+
 [dependencies]
 # server
 axum = "0.7.5"
