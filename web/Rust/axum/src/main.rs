@@ -22,7 +22,7 @@ async fn main() -> Result<()> {
     init_logger();
     info!("Hello, world!");
 
-    let port = env::var("VENUS_PORT")
+    let port = env::var("PHTHONUS_PORT")
         .map(|port| port.parse::<u16>().unwrap_or(DEFAULT_PORT))
         .unwrap_or(DEFAULT_PORT);
     let addr = SocketAddr::from(([0, 0, 0, 0], port));
