@@ -20,7 +20,6 @@ type Result<T> = std::result::Result<T, Box<dyn Error>>;
 async fn main() -> Result<()> {
     dotenv().ok();
     init_logger();
-    info!("Hello, world!");
 
     let port = env::var("PHTHONUS_PORT")
         .map(|port| port.parse::<u16>().unwrap_or(DEFAULT_PORT))
