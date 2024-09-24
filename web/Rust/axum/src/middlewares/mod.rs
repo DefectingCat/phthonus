@@ -12,7 +12,10 @@ use tower_http::classify::ServerErrorsFailureClass;
 use tower_http::trace::TraceLayer;
 use tracing::{error, info, info_span, Span};
 
-use crate::error::AppResult;
+use crate::{
+    consts::{NAME, VERSION},
+    error::AppResult,
+};
 
 /// Middleware for adding version information to each response's headers.
 ///
@@ -27,11 +30,8 @@ pub async fn add_version(
 ) -> AppResult<impl IntoResponse> {
     let mut res = next.run(req).await;
     let headers = res.headers_mut();
-    headers.append("Server", HeaderValue::from_static(env!("CARGO_PKG_NAME")));
-    headers.append(
-        "Phthonus-Version",
-        HeaderValue::from_static(env!("CARGO_PKG_VERSION")),
-    );
+    headers.append("Server", HeaderValue::from_static(NAME));
+    headers.append("Phthonus-Version", HeaderValue::from_static(VERSION));
     Ok(res)
 }
 
