@@ -1,5 +1,5 @@
 [package]
-name = "axum-xitca"
+name = "phthonus"
 version = "0.1.0"
 edition = "2021"
 
@@ -9,13 +9,9 @@ axum = { version = "0.7.6", default-features = false, features = [
     "json",
     "query",
 ] }
-xitca-server = "0.4.0"
+xitca-server = { version = "0.4.0", features = ["io-uring"] }
 xitca-http = { version = "0.6.0", features = ["io-uring"] }
-xitca-io = { version = "0.4.1", features = [
-    "tokio-uring",
-    "tokio",
-    "runtime-uring",
-] }
+xitca-io = { version = "0.4.1", features = ["runtime-uring"] }
 xitca-service = "0.2.0"
 xitca-web = { version = "0.6.2", features = ["tower-http-compat"] }
 tower = "0.5.1"

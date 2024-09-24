@@ -131,31 +131,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "axum-xitca"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "axum",
- "dotenvy",
- "http-body",
- "serde",
- "serde_json",
- "serde_repr",
- "thiserror",
- "tokio",
- "tower",
- "tower-http",
- "tracing",
- "tracing-subscriber",
- "xitca-http",
- "xitca-io",
- "xitca-server",
- "xitca-service",
- "xitca-unsafe-collection",
- "xitca-web",
-]
-
-[[package]]
 name = "backtrace"
 version = "0.3.74"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -558,6 +533,31 @@ name = "percent-encoding"
 version = "2.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e3148f5046208a5d56bcfc03053e3ca6334e51da8dfb19b6cdc8b306fae3283e"
+
+[[package]]
+name = "phthonus"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "axum",
+ "dotenvy",
+ "http-body",
+ "serde",
+ "serde_json",
+ "serde_repr",
+ "thiserror",
+ "tokio",
+ "tower",
+ "tower-http",
+ "tracing",
+ "tracing-subscriber",
+ "xitca-http",
+ "xitca-io",
+ "xitca-server",
+ "xitca-service",
+ "xitca-unsafe-collection",
+ "xitca-web",
+]
 
 [[package]]
 name = "pin-project-lite"
@@ -1212,6 +1212,7 @@ checksum = "a40a05f18780f1de843c5077583e4650b08d0518fcf9cf7948e28bc92e489736"
 dependencies = [
  "socket2 0.5.7",
  "tokio",
+ "tokio-uring",
  "tracing",
  "xitca-io",
  "xitca-service",
