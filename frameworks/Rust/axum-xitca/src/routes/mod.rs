@@ -19,6 +19,8 @@ use crate::{
     middlewares::{add_version, logging_route},
 };
 
+mod json;
+
 #[derive(Debug, Serialize)]
 pub struct RouteResponse<T>
 where
@@ -29,11 +31,24 @@ where
     message: Option<Cow<'static, str>>,
     data: T,
 }
+impl<T> Default for RouteResponse<T>
+where
+    T: Serialize + Default,
+{
+    fn default() -> Self {
+        Self {
+            code: ErrorCode::Normal,
+            message: None,
+            data: T::default(),
+        }
+    }
+}
 pub type RouteResult<T> = AppResult<Json<RouteResponse<T>>>;
 
 pub fn routes() -> Router {
     let router = Router::new()
         .route("/", get(hello).post(hello))
+        .route("/json", get(json::json).post(json::json))
         .layer(
             ServiceBuilder::new()
                 .layer(middleware::from_fn(add_version))
