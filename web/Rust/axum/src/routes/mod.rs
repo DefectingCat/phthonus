@@ -11,13 +11,15 @@ use axum::{
 };
 use serde::Serialize;
 use tower::ServiceBuilder;
-use tower_http::{compression::CompressionLayer, cors::CorsLayer, timeout::TimeoutLayer};
+use tower_http::timeout::TimeoutLayer;
 use tracing::info;
 
 use crate::{
     error::{AppResult, ErrorCode},
     middlewares::{add_version, logging_route},
 };
+
+pub mod json;
 
 #[derive(Debug, Serialize)]
 pub struct RouteResponse<T>
@@ -34,12 +36,11 @@ pub type RouteResult<T> = AppResult<Json<RouteResponse<T>>>;
 pub fn routes() -> Router {
     let router = Router::new()
         .route("/", get(hello).post(hello))
+        .route("/json", get(json::json).post(json::json))
         .layer(
             ServiceBuilder::new()
                 .layer(middleware::from_fn(add_version))
-                .layer(CorsLayer::permissive())
-                .layer(TimeoutLayer::new(Duration::from_secs(15)))
-                .layer(CompressionLayer::new()),
+                .layer(TimeoutLayer::new(Duration::from_secs(15))),
         )
         .fallback(fallback);
     logging_route(router)
