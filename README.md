@@ -22,3 +22,4 @@ Web framework comparison in my stack.
 - Nodejs
 - Deno
 - Bunjs
+  - [ ] Elysia
