@@ -20,6 +20,8 @@ pub enum AppError {
     AxumFormRejection(#[from] FormRejection),
     #[error(transparent)]
     AxumJsonRejection(#[from] JsonRejection),
+    #[error(transparent)]
+    ValidationError(#[from] validator::ValidationErrors),
     // route
     // 路由通常错误 错误信息直接返回用户
     // #[error("{0}")]
@@ -74,17 +76,21 @@ impl IntoResponse for AppError {
         use ErrorCode::*;
 
         let (status_code, code, err_message) = match self {
+            // route
+            // AppError::AuthorizeFailed(err) => {
+            //     (StatusCode::UNAUTHORIZED, AuthorizeFailed, err.to_string())
+            // }
+            // AppError::UserConflict(err) => (StatusCode::CONFLICT, UserConflict, err.to_string()),
             AppError::Any(err) => log_internal_error(err),
             AppError::AxumFormRejection(_) | AppError::AxumJsonRejection(_) => (
                 StatusCode::BAD_REQUEST,
                 ParameterIncorrect,
                 self.to_string(),
             ),
-            // route
-            // AppError::AuthorizeFailed(err) => {
-            //     (StatusCode::UNAUTHORIZED, AuthorizeFailed, err.to_string())
-            // }
-            // AppError::UserConflict(err) => (StatusCode::CONFLICT, UserConflict, err.to_string()),
+            AppError::ValidationError(_) => {
+                let message = format!("Input validation error: [{self}]").replace('\n', ", ");
+                (StatusCode::BAD_REQUEST, ParameterIncorrect, message)
+            }
         };
         let body = Json(json!({
             "code": code,

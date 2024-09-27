@@ -6,7 +6,7 @@ use axum::{
     http::{request::Parts, StatusCode, Uri},
     middleware,
     response::{IntoResponse, Response},
-    routing::get,
+    routing::{get, post},
     Json, RequestPartsExt, Router,
 };
 use serde::Serialize;
@@ -20,6 +20,7 @@ use crate::{
 };
 
 mod json;
+mod user;
 
 #[derive(Debug, Serialize)]
 pub struct RouteResponse<T>
@@ -49,6 +50,7 @@ pub fn routes() -> Router {
     let router = Router::new()
         .route("/", get(hello).post(hello))
         .route("/json", get(json::json).post(json::json))
+        .route("/user", post(user::register))
         .layer(
             ServiceBuilder::new()
                 .layer(middleware::from_fn(add_version))

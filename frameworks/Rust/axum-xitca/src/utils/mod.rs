@@ -2,6 +2,7 @@ use tokio::signal;
 use tracing_subscriber::{fmt, prelude::*, registry, EnvFilter};
 
 pub mod jwt;
+pub mod validator;
 
 /// Initializes the logger for tracing.
 pub fn init_logger() {

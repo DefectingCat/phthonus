@@ -8,6 +8,7 @@ tokio = { version = "1.40.0", features = ["full"] }
 axum = { version = "0.7.6", default-features = false, features = [
     "json",
     "query",
+    "form",
 ] }
 xitca-server = { version = "0.4.0", features = ["io-uring"] }
 xitca-http = { version = "0.6.0", features = ["io-uring"] }
@@ -29,3 +30,4 @@ serde_repr = "0.1.19"
 http-body = "1.0.1"
 xitca-unsafe-collection = "0.2.0"
 jsonwebtoken = "9.3.0"
+validator = { version = "0.18.1", features = ["derive"] }
