@@ -1,4 +1,6 @@
-CARGO = cargo
+RUSTFLAGS := "-Zthreads=8"
+
+CARGO = RUSTFLAGS=$(RUSTFLAGS) cargo
 RUSTC = rustc
 CROSS = cross
 
@@ -7,7 +9,7 @@ all: build
 build:
 	$(CARGO) build
 
-release: clean
+release:
 	$(CARGO) build --release
 
 dev:
@@ -52,11 +54,5 @@ freebsd: clean-release
 
 loongarch: clean-release
 	$(CROSS) build --release --target loongarch64-unknown-linux-gnu
-
-deps:
-	python -m venv venus \
-		&& source venus/bin/activate \
-		&& pip install -r scripts/requirements.txt \
-		&& python scripts/download-core.py
 
 .PHONY: all

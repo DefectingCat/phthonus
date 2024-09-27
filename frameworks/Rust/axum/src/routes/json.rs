@@ -3,11 +3,9 @@ use std::borrow::Cow;
 use axum::Json;
 use serde::{Deserialize, Serialize};
 
-use crate::error::ErrorCode;
-
 use super::{RouteResponse, RouteResult};
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Serialize, Deserialize, Default)]
 pub struct JsonData {
     pub name: Cow<'static, str>,
 }
@@ -15,10 +13,8 @@ pub struct JsonData {
 pub async fn json() -> RouteResult<JsonData> {
     let data = JsonData { name: "xfy".into() };
     let res = RouteResponse {
-        code: ErrorCode::Normal,
-        message: None,
         data,
+        ..Default::default()
     };
-
     Ok(Json(res))
 }

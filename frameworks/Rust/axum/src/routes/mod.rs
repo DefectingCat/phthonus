@@ -31,6 +31,18 @@ where
     message: Option<Cow<'static, str>>,
     data: T,
 }
+impl<T> Default for RouteResponse<T>
+where
+    T: Serialize + Default,
+{
+    fn default() -> Self {
+        Self {
+            code: ErrorCode::Normal,
+            message: None,
+            data: T::default(),
+        }
+    }
+}
 pub type RouteResult<T> = AppResult<Json<RouteResponse<T>>>;
 
 pub fn routes() -> Router {
