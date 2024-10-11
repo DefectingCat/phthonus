@@ -43,7 +43,15 @@ where
         }
     }
 }
-pub type RouteResult<T> = AppResult<Json<RouteResponse<T>>>;
+impl<T> IntoResponse for RouteResponse<T>
+where
+    T: Serialize + Default,
+{
+    fn into_response(self) -> Response {
+        (StatusCode::OK, Json(self)).into_response()
+    }
+}
+pub type RouteResult<T> = AppResult<RouteResponse<T>>;
 
 pub fn routes() -> Router {
     let router = Router::new()

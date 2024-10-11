@@ -1,6 +1,5 @@
 use std::borrow::Cow;
 
-use axum::Json;
 use serde::{Deserialize, Serialize};
 
 use super::{RouteResponse, RouteResult};
@@ -16,5 +15,5 @@ pub async fn json() -> RouteResult<JsonData> {
         data,
         ..Default::default()
     };
-    Ok(Json(res))
+    Ok(res)
 }
