@@ -20,6 +20,7 @@ use crate::{
 };
 
 pub mod json;
+pub mod text;
 
 #[derive(Debug, Serialize)]
 pub struct RouteResponse<T>
@@ -57,6 +58,7 @@ pub fn routes() -> Router {
     let router = Router::new()
         .route("/", get(hello).post(hello))
         .route("/json", get(json::json).post(json::json))
+        .route("/text", get(text::text).post(text::text))
         .layer(
             ServiceBuilder::new()
                 .layer(middleware::from_fn(add_version))
