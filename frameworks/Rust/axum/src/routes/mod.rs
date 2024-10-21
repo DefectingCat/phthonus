@@ -11,6 +11,7 @@ use serde::Serialize;
 use tower::ServiceBuilder;
 use tower_http::timeout::TimeoutLayer;
 use tracing::info;
+use user::user_routes;
 
 use crate::{
     error::{AppResult, ErrorCode},
@@ -58,6 +59,7 @@ pub fn routes() -> Router {
         .route("/", get(hello).post(hello))
         .route("/json", get(json::json).post(json::json))
         .route("/text", get(text::text).post(text::text))
+        .nest("/user", user_routes())
         .layer(
             ServiceBuilder::new()
                 .layer(middleware::from_fn(add_version))
