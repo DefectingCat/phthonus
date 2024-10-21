@@ -1,13 +1,11 @@
-use std::{borrow::Cow, collections::HashMap, time::Duration};
+use std::{borrow::Cow, time::Duration};
 
 use axum::{
-    async_trait,
-    extract::{FromRequestParts, Path},
-    http::{request::Parts, StatusCode, Uri},
+    http::{StatusCode, Uri},
     middleware,
     response::{IntoResponse, Response},
     routing::get,
-    Json, RequestPartsExt, Router,
+    Json, Router,
 };
 use serde::Serialize;
 use tower::ServiceBuilder;
@@ -21,6 +19,7 @@ use crate::{
 
 pub mod json;
 pub mod text;
+pub mod user;
 
 #[derive(Debug, Serialize)]
 pub struct RouteResponse<T>
@@ -71,4 +70,9 @@ pub fn routes() -> Router {
 /// hello world
 pub async fn hello() -> String {
     format!("hello {}", env!("CARGO_PKG_NAME"))
+}
+
+pub async fn fallback(uri: Uri) -> impl IntoResponse {
+    info!("route {} not found", uri);
+    (StatusCode::NOT_FOUND, "Not found")
 }
