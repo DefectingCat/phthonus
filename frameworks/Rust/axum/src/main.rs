@@ -1,7 +1,7 @@
 use std::{env, error::Error, net::SocketAddr};
 
 use axum::Router;
-use consts::DEFAULT_PORT;
+use consts::{DEFAULT_PORT, RUA_COMPILER};
 use dotenvy::dotenv;
 use routes::routes;
 use tokio::net::TcpListener;
@@ -21,6 +21,8 @@ async fn main() -> Result<()> {
     dotenv().ok();
     init_logger();
 
+    info!("Phthonus {}", RUA_COMPILER);
+    info!("Starting server");
     let port = env::var("PHTHONUS_PORT")
         .map(|port| port.parse::<u16>().unwrap_or(DEFAULT_PORT))
         .unwrap_or(DEFAULT_PORT);
