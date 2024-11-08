@@ -15,6 +15,8 @@ pub enum AppError {
     #[error("{0}")]
     Any(#[from] anyhow::Error),
 
+    #[error(transparent)]
+    ValidationError(#[from] validator::ValidationErrors),
     // axum
     #[error(transparent)]
     AxumFormRejection(#[from] FormRejection),
@@ -80,11 +82,14 @@ impl IntoResponse for AppError {
                 ParameterIncorrect,
                 self.to_string(),
             ),
-            // route
-            // AppError::AuthorizeFailed(err) => {
-            //     (StatusCode::UNAUTHORIZED, AuthorizeFailed, err.to_string())
-            // }
-            // AppError::UserConflict(err) => (StatusCode::CONFLICT, UserConflict, err.to_string()),
+            AppError::ValidationError(_) => {
+                let message = format!("Input validation error: [{self}]").replace('\n', ", ");
+                (StatusCode::BAD_REQUEST, ParameterIncorrect, message)
+            } // route
+              // AppError::AuthorizeFailed(err) => {
+              //     (StatusCode::UNAUTHORIZED, AuthorizeFailed, err.to_string())
+              // }
+              // AppError::UserConflict(err) => (StatusCode::CONFLICT, UserConflict, err.to_string()),
         };
         let body = Json(json!({
             "code": code,
