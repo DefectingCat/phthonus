@@ -1,5 +1,9 @@
-use crate::utils::password::hash;
+use crate::utils::{
+    jwt::{self, Claims},
+    password::hash,
+};
 use axum::{routing::post, Json, Router};
+use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 
@@ -37,11 +41,20 @@ pub async fn registry(Json(user_param): Json<UserResigtry>) -> RouteResult<UserR
 
     let hashed = hash(password).await?;
 
+    let iat = Utc::now().naive_utc();
+    let exp = (iat + chrono::naive::Days::new(7)).and_utc().timestamp() as usize;
+    let claims = Claims {
+        exp,
+        iat: iat.and_utc().timestamp() as usize,
+        sub: username.clone(),
+    };
+    let token = jwt::encode_jwt(&claims)?;
+
     let data = UserResigtryRes {
         username,
         email,
         password: hashed,
-        token: "abc".to_string(),
+        token,
     };
     let res = RouteResponse {
         data,

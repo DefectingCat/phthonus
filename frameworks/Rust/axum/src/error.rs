@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::{borrow::Cow, fmt::Display};
 
 use axum::{
     extract::rejection::{FormRejection, JsonRejection},
@@ -22,12 +22,13 @@ pub enum AppError {
     AxumFormRejection(#[from] FormRejection),
     #[error(transparent)]
     AxumJsonRejection(#[from] JsonRejection),
+    // jwt
+    #[error(transparent)]
+    Jwt(#[from] jsonwebtoken::errors::Error),
     // route
     // 路由通常错误 错误信息直接返回用户
-    // #[error("{0}")]
-    // AuthorizeFailed(Cow<'static, str>),
-    // #[error("{0}")]
-    // UserConflict(Cow<'static, str>),
+    #[error("{0}")]
+    InvalidToken(Cow<'static, str>),
 }
 
 #[derive(Serialize_repr, Deserialize_repr, PartialEq, Debug)]
@@ -35,7 +36,7 @@ pub enum AppError {
 pub enum ErrorCode {
     Normal = 200,
     InternalError = 1000,
-    //NotAuthorized = 1001,
+    // NotAuthorized = 1001,
     AuthorizeFailed = 1002,
     UserConflict = 1003,
     ParameterIncorrect = 1004,
@@ -77,6 +78,7 @@ impl IntoResponse for AppError {
 
         let (status_code, code, err_message) = match self {
             AppError::Any(err) => log_internal_error(err),
+            AppError::Jwt(err) => log_internal_error(err),
             AppError::AxumFormRejection(_) | AppError::AxumJsonRejection(_) => (
                 StatusCode::BAD_REQUEST,
                 ParameterIncorrect,
@@ -85,11 +87,12 @@ impl IntoResponse for AppError {
             AppError::ValidationError(_) => {
                 let message = format!("Input validation error: [{self}]").replace('\n', ", ");
                 (StatusCode::BAD_REQUEST, ParameterIncorrect, message)
-            } // route
-              // AppError::AuthorizeFailed(err) => {
-              //     (StatusCode::UNAUTHORIZED, AuthorizeFailed, err.to_string())
-              // }
-              // AppError::UserConflict(err) => (StatusCode::CONFLICT, UserConflict, err.to_string()),
+            }
+            AppError::InvalidToken(_) => (
+                StatusCode::BAD_REQUEST,
+                AuthorizeFailed,
+                "Invalid token".to_string(),
+            ),
         };
         let body = Json(json!({
             "code": code,
