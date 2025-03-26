@@ -5,27 +5,29 @@ edition = "2021"
 
 [dependencies]
 # server
-axum = "0.7.7"
-axum-extra = { version = "0.9.6", features = ["typed-header"] }
-tokio = { version = "1.41.1", features = ["full"] }
-tower = "0.5.1"
-tower-http = { version = "0.6.1", features = ["full"] }
-tracing = "0.1.40"
-tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
+axum = "0.8.1"
+axum-extra = { version = "0.10.0", features = ["typed-header"] }
+tokio = { version = "1.44.1", features = ["full"] }
+tower = "0.5.2"
+tower-http = { version = "0.6.2", features = ["full"] }
+tracing = "0.1.41"
+tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
 # error
-anyhow = "1.0.93"
-thiserror = "2.0.0"
+anyhow = "1.0.97"
+thiserror = "2.0.12"
 # tools
 dotenvy = "0.15.7"
-argon2 = "0.5.3"
-rand = "0.8.5"
 regex = "1.11.1"
-serde = { version = "1.0.214", features = ["derive", "serde_derive"] }
-serde_json = { version = "1.0.132" }
-serde_repr = "0.1.19"
-jsonwebtoken = "9.3.0"
-validator = { version = "0.19.0", features = ["derive"] }
-chrono = "0.4.38"
+serde = { version = "1.0.219", features = ["derive", "serde_derive"] }
+serde_json = { version = "1.0.140" }
+serde_repr = "0.1.20"
+chrono = "0.4.40"
+argon2 = "0.5.3"
+# password
+fastrand = "2.3.0"
+rand = "0.9.0"
+validator = { version = "0.20.0", features = ["derive"] }
+jsonwebtoken = "9.3.1"
 
 [profile.release]
 lto = true

@@ -1,6 +1,6 @@
 use std::sync::LazyLock;
 
-use axum::{async_trait, extract::FromRequestParts, http::request::Parts, RequestPartsExt};
+use axum::{extract::FromRequestParts, http::request::Parts, RequestPartsExt};
 use axum_extra::{
     headers::{authorization::Bearer, Authorization},
     TypedHeader,
@@ -8,7 +8,7 @@ use axum_extra::{
 use jsonwebtoken::{
     decode, encode, Algorithm, DecodingKey, EncodingKey, Header, TokenData, Validation,
 };
-use rand::distributions::{Alphanumeric, DistString};
+use rand::distr::{Alphanumeric, SampleString};
 use serde::{Deserialize, Serialize};
 
 use crate::error::AppError;
@@ -28,7 +28,7 @@ impl Keys {
 }
 
 pub static KEYS: LazyLock<Keys> = LazyLock::new(|| {
-    let secret = Alphanumeric.sample_string(&mut rand::thread_rng(), 32);
+    let secret = Alphanumeric.sample_string(&mut rand::rng(), 32);
     Keys::new(secret.as_bytes())
 });
 
@@ -42,7 +42,6 @@ pub struct Claims {
     pub sub: String, // Optional. Subject (whom token refers to)
 }
 
-#[async_trait]
 impl<S> FromRequestParts<S> for Claims
 where
     S: Send + Sync,
